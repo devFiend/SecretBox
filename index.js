@@ -114,7 +114,7 @@ app.post('/box/:username', async (req, res) => {
 
         await pool.query('INSERT INTO messages (box_id, content) VALUES ($1, $2)', [boxId, content]);
 
-        res.send('Message sent anonymously!');
+        res.render('success', { username, content });
     } catch (err) {
         console.error(err);
         res.send('Error sending message.');

@@ -1,0 +1,137 @@
+/* Global Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #ff7f50, #ff1493); /* Fun gradient */
+}
+
+/* Container for the Page */
+.container {
+    background-color: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.container:hover {
+    transform: scale(1.05); /* Slight zoom effect */
+}
+
+/* Title */
+h1, h2 {
+    font-size: 2.2em;
+    color: #32cd32; /* Green for a welcoming message */
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Form and Input Fields */
+input[type="text"],
+input[type="password"],
+textarea {
+    padding: 12px;
+    width: 100%;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 1.2em;
+    background-color: #f7f7f7;
+    resize: none;
+}
+
+/* Character Count */
+#charCount {
+    font-size: 1.1em;
+    color: #ff1493; /* Pink color for the counter */
+    margin-bottom: 20px;
+}
+
+/* Button */
+button,
+a.btn {
+    background-color: #32cd32; /* Green button */
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1.3em;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+button:hover,
+a.btn:hover {
+    background-color: #ff7f50; /* Orange hover effect */
+    transform: scale(1.1); /* Slight grow effect */
+}
+
+/* Error Message */
+p[style*="color: red;"] {
+    font-size: 1.1em;
+    color: red;
+    margin-top: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+        padding: 20px;
+    }
+
+    h1, h2 {
+        font-size: 1.8em;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    textarea {
+        font-size: 1em;
+    }
+
+    button,
+    a.btn {
+        font-size: 1.2em;
+        padding: 10px 20px;
+    }
+}
+
+/* Fun Background for Success Page */
+body.success {
+    background: linear-gradient(135deg, #32cd32, #ff7f50); /* Green to Orange gradient */
+}
+
+body.success .container {
+    background-color: #fff;
+    padding: 50px;
+    border-radius: 15px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Success Page Text */
+.success h1 {
+    font-size: 2.5em;
+    color: #ff1493;
+    margin-bottom: 20px;
+}
+
+.success p {
+    font-size: 1.2em;
+    color: #4caf50;
+}
+
+.success .btn {
+    background-color: #ff1493; /* Pink button for success */
+    margin-top: 20px;
+}

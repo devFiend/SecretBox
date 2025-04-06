@@ -4,27 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= username %>'s Inbox </title>
+    <link rel="stylesheet" href="/styles.css"> <!-- Link to styles.css -->
 </head>
 <body>
-    <h2>Messages for <%= username %>'s SecretBox</h2>
+    <div class="container">
+        <h2>Messages for <%= username %>'s SecretBox</h2>
 
-    <% if (messages.length === 0) { %>
-        <p>No messages yet. Share your box link and wait for secrets!</p>
-    <% } else { %>
-        <ul>
-            <% messages.forEach((message) => { %>
-                <li>
-                    <p><strong>Message:</strong> <%= message.content %> </p>
-                    <p><em>Sent at: <%= message.sent_at %></em></p>
-                </li>
+        <% if (messages.length === 0) { %>
+            <p>No messages yet. Share your box link and wait for secrets!</p>
+        <% } else { %>
+            <ul class="message-list">
+                <% messages.forEach((message) => { %>
+                    <li class="message-item">
+                        <p><strong>Message:</strong> <%= message.content %> </p>
+                        <p><em>Sent at: <%= message.sent_at %></em></p>
+                    </li>
                 <% }) %>
-        </ul>
-    <% } %>
-    <p><strong>Total messages:</strong> <%= messageCount %></p>
+            </ul>
+        <% } %>
+        <p><strong>Total messages:</strong> <%= messageCount %></p>
 
-    <p>Your secret box is ready! Share this link:</p>
-    <a href="/box/<%= username %>">/box/<%= username %></a>
-
-    
+        <p>Your secret box is ready! Share this link:</p>
+        <a href="/box/<%= username %>" class="box-link">/box/<%= username %></a>
+    </div>
 </body>
 </html>
