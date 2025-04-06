@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send a Secret</title>
+</head>
+<body>
+    <h2>Send a message to <%= username %>'s SecretBox</h2>
+
+    <form action="/box/<%= username %>" method="post">
+        <textarea name="content" placeholder="Your message..." required></textarea><br>
+        <button type="submit">Send Anonymously</button>
+    </form>
+    
+</body>
+</html>
