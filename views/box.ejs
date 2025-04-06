@@ -8,10 +8,29 @@
 <body>
     <h2>Send a message to <%= username %>'s SecretBox</h2>
 
-    <form action="/box/<%= username %>" method="post">
-        <textarea name="content" placeholder="Your message..." required></textarea><br>
-        <button type="submit">Send Anonymously</button>
+    <form action="/box/<%= username %>" method="POST">
+        <textarea id="messageContent" name="content" rows="5" placeholder="Type your anonymous message here..." required></textarea>
+        <p id="charCount">0/500</p>
+        <button type="submit">Send Message</button>
     </form>
+    
+    <script>
+        const messageContent = document.getElementById('messageContent');
+        const charCount = document.getElementById('charCount');
+        const MAX_CHAR_LIMIT = 500;
+    
+        messageContent.addEventListener('input', () => {
+            const currentLength = messageContent.value.length;
+            charCount.textContent = `${currentLength}/${MAX_CHAR_LIMIT}`;
+    
+            // Disable the button if the character limit is reached
+            if (currentLength > MAX_CHAR_LIMIT) {
+                messageContent.value = messageContent.value.slice(0, MAX_CHAR_LIMIT); // Trim to limit
+                charCount.textContent = `${MAX_CHAR_LIMIT}/${MAX_CHAR_LIMIT}`;
+            }
+        });
+    </script>
+    
 
 </body>
 </html>

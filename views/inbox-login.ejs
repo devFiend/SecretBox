@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <h2>Login to your SecretBox</h2>
+<form action="/inbox/<%= username %>" method="POST">
+  <input type="password" name="password" placeholder="Enter your password" required />
+  <% if (error) { %>
+    <p style="color: red;"><%= error %></p>
+  <% } %>
+  <button type="submit">Login</button>
+</form>
+
+</body>
+</html>
