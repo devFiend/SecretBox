@@ -16,8 +16,12 @@ const port = process.env.PORT || 3000;
 
 // setting up your database connection
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  });
+  
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
