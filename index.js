@@ -51,6 +51,31 @@ cron.schedule('0 * * * *', async () => {  // Runs every hour
     }
   });
 
+  app.get('/init-db', async (req, res) => {
+    try {
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS boxes (
+          id SERIAL PRIMARY KEY,
+          username VARCHAR(255) UNIQUE NOT NULL,
+          password TEXT NOT NULL,
+          created_at TIMESTAMPTZ DEFAULT NOW()
+        );
+        
+        CREATE TABLE IF NOT EXISTS messages (
+          id SERIAL PRIMARY KEY,
+          box_id INTEGER REFERENCES boxes(id) ON DELETE CASCADE,
+          content TEXT NOT NULL,
+          sent_at TIMESTAMPTZ DEFAULT NOW()
+        );
+      `);
+      res.send('✅ Tables created!');
+    } catch (err) {
+      console.error(err);
+      res.send('❌ Error creating tables.');
+    }
+  });
+  
+
 // setting up routes
 
 app.get('/', (req, res) => {
