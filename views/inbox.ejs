@@ -5,27 +5,184 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= username %>'s Inbox </title>
     <link rel="stylesheet" href="/styles.css"> <!-- Link to styles.css -->
+
+<style>
+    /* Container Styles */
+.container {
+    background-color: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Hover Effect for Container */
+.container:hover {
+    transform: scale(1.05);
+}
+
+/* Title */
+h2 {
+    font-size: 2.5em;
+    color: #32cd32; /* Green color for the title */
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Messages Section */
+.message-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.message-item {
+    background-color: #f7f7f7;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    font-size: 1.1em;
+}
+
+.message-item p {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.message-item em {
+    color: #666;
+    font-size: 1em;
+}
+
+/* Empty Message */
+p.no-messages {
+    font-size: 1.3em;
+    color: #ff1493; /* Pink for no messages */
+    margin-top: 20px;
+}
+
+/* Secret Box Link */
+.box-link-container {
+    margin-top: 30px;
+}
+
+.box-link {
+    display: inline-block;
+    font-size: 1.3em;
+    color: #32cd32; /* Green link */
+    text-decoration: none;
+    margin-right: 15px;
+    padding: 10px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+.box-link:hover {
+    background-color: #ff7f50; /* Hover effect for the link */
+    color: white;
+    transform: scale(1.05);
+}
+
+.copy-btn {
+    background-color: #32cd32; /* Green button */
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1.2em;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.copy-btn:hover {
+    background-color: #ff7f50; /* Hover effect for copy button */
+    transform: scale(1.1);
+}
+
+/* Total Messages Section */
+p strong {
+    font-size: 1.3em;
+    color: #32cd32; /* Green color for strong text */
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 2em;
+    }
+
+    .message-item {
+        font-size: 1.1em;
+    }
+
+    .box-link {
+        font-size: 1.1em;
+        padding: 8px;
+    }
+
+    .copy-btn {
+        font-size: 1.1em;
+        padding: 10px 20px;
+    }
+}
+
+</style>
 </head>
 <body>
     <div class="container">
         <h2>Messages for <%= username %>'s SecretBox</h2>
-
+    
         <% if (messages.length === 0) { %>
-            <p>No messages yet. Share your box link and wait for secrets!</p>
+            <p class="no-messages">No messages yet. Share your box link and wait for secrets!</p>
         <% } else { %>
             <ul class="message-list">
                 <% messages.forEach((message) => { %>
                     <li class="message-item">
                         <p><strong>Message:</strong> <%= message.content %> </p>
-                        <p><em>Sent at: <%= message.sent_at %></em></p>
+                        <!-- <p><em>Sent at: <%= message.sent_at %></em></p> -->
                     </li>
                 <% }) %>
             </ul>
         <% } %>
+    
         <p><strong>Total messages:</strong> <%= messageCount %></p>
-
+    
         <p>Your secret box is ready! Share this link:</p>
-        <a href="/box/<%= username %>" class="box-link">/box/<%= username %></a>
+        <div class="box-link-container">
+            <a href="/box/<%= username %>" class="box-link" id="boxLink" style="display: none;"></a>
+            <button class="copy-btn" onclick="copyLink()">Copy</button>
+        </div>
     </div>
+    
+
+    <script>
+
+function copyLink() {
+    const baseUrl = window.location.origin; // Get the base URL of the app (including domain)
+    const boxPath = document.querySelector('.box-link').getAttribute('href'); // Get the path part
+    const fullUrl = baseUrl + boxPath; // Combine the base URL and path
+    
+    navigator.clipboard.writeText(fullUrl) // Write the full URL to the clipboard
+        .then(() => {
+            alert("Link copied to clipboard!"); // Optional alert to inform the user
+        })
+        .catch((error) => {
+            console.error("Failed to copy the link: ", error);
+        });
+}
+
+    </script>
 </body>
 </html>

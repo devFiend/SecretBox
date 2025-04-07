@@ -98,12 +98,41 @@ p[style*="color: red;"] {
     input[type="password"],
     textarea {
         font-size: 1em;
+        padding: 10px;
     }
 
     button,
     a.btn {
         font-size: 1.2em;
         padding: 10px 20px;
+    }
+}
+
+/* Further Adjustment for Smaller Mobile Screens */
+@media (max-width: 480px) {
+    h1, h2 {
+        font-size: 1.6em;
+    }
+
+    .container {
+        padding: 15px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    textarea {
+        font-size: 0.9em;
+        padding: 8px;
+    }
+
+    button,
+    a.btn {
+        font-size: 1.1em;
+        padding: 8px 16px;
+    }
+
+    #charCount {
+        font-size: 1em;
     }
 }
 

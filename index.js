@@ -14,6 +14,9 @@ const saltRounds = 10;
 const app = express();
 const port = process.env.PORT || 3000;
 
+console.log("🔗 DB URL:", process.env.DATABASE_URL);
+
+
 // setting up your database connection
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
@@ -27,53 +30,47 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-// Cleanup job: run every hour
-cron.schedule('0 * * * *', async () => {  // Runs every hour
+// Cleanup job: run every minute
+cron.schedule('* * * * *', async () => {  // Runs every minute
     try {
-      // Check for boxes older than 24 hours
-      const result = await pool.query(
-        'SELECT * FROM boxes WHERE created_at < NOW() - INTERVAL \'24 HOURS\''
-      );
+        // Delete messages older than 30 minutes
+        const result = await pool.query(
+            'DELETE FROM messages WHERE sent_at < NOW() - INTERVAL \'30 MINUTES\''
+        );
   
-      if (result.rows.length > 0) {
-        // Loop through all expired boxes
-        for (const box of result.rows) {
-          // Delete messages
-          await pool.query('DELETE FROM messages WHERE box_id = $1', [box.id]);
-          
-          // Delete the box itself
-          await pool.query('DELETE FROM boxes WHERE id = $1', [box.id]);
-          console.log(`Box ${box.username} deleted after 24 hours.`);
+        if (result.rowCount > 0) {
+            console.log(`${result.rowCount} message(s) deleted as they were older than 30 minutes.`);
         }
-      }
     } catch (err) {
-      console.error('❌ Error deleting expired boxes:', err);
+        console.error('❌ Error deleting old messages:', err);
     }
-  });
+});
+
 
   app.get('/init-db', async (req, res) => {
     try {
       await pool.query(`
-        CREATE TABLE IF NOT EXISTS boxes (
+        CREATE TABLE  boxes (
           id SERIAL PRIMARY KEY,
           username VARCHAR(255) UNIQUE NOT NULL,
           password TEXT NOT NULL,
-          created_at TIMESTAMPTZ DEFAULT NOW()
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
-        
-        CREATE TABLE IF NOT EXISTS messages (
+  
+        CREATE TABLE  messages (
           id SERIAL PRIMARY KEY,
           box_id INTEGER REFERENCES boxes(id) ON DELETE CASCADE,
           content TEXT NOT NULL,
-          sent_at TIMESTAMPTZ DEFAULT NOW()
+          sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
       `);
       res.send('✅ Tables created!');
     } catch (err) {
-      console.error(err);
-      res.send('❌ Error creating tables.');
+      console.error('❌ SQL Error:', err.message); // log the actual error
+      res.send(`❌ Error creating tables: ${err.message}`);
     }
   });
+  
   
 
 // setting up routes
@@ -200,18 +197,35 @@ app.get('/inbox/:username', async (req, res) => {
         'SELECT * FROM messages WHERE box_id = $1 ORDER BY sent_at DESC',
         [box.id]
       );
+
+      // Format the `sent_at` field to just show the time (HH:mm:ss)
+      const formattedMessages = messagesResult.rows.map(message => {
+        // Convert the UTC string into a Date object
+        const date = new Date(message.sent_at);
+      
+        // Format it to the local time (using 'en-US' for 12-hour time format, you can adjust this based on your needs)
+        const time = date.toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        });
+      
+        message.sent_at = time; // Update sent_at with the formatted time
+        return message;
+      });
   
       res.render('inbox', {
         username,
-        messages: messagesResult.rows,
-        messageCount: messagesResult.rows.length,
+        messages: formattedMessages,
+        messageCount: formattedMessages.length,
       });
   
     } catch (err) {
       console.error(err);
       res.send('Error loading inbox.');
     }
-  });
+});
+
   
 
 app.listen(port, () => {
