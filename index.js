@@ -14,8 +14,6 @@ const saltRounds = 10;
 const app = express();
 const port = process.env.PORT || 3000;
 
-console.log("🔗 DB URL:", process.env.DATABASE_URL);
-
 
 // setting up your database connection
 const pool = new Pool({
@@ -45,6 +43,26 @@ cron.schedule('* * * * *', async () => {  // Runs every minute
         console.error('❌ Error deleting old messages:', err);
     }
 });
+
+// Cron job to delete boxes older than 24 hours
+cron.schedule('* * * * *', async () => {  // Runs every minute
+    try {
+      // Get the current time minus 24 hours
+      const timeLimit = new Date(Date.now() - 24 * 60 * 60 * 1000); // 24 hours ago
+  
+      // Delete boxes that were created more than 24 hours ago
+      const deleteResult = await pool.query(
+        'DELETE FROM boxes WHERE created_at < $1',
+        [timeLimit]
+      );
+  
+      if (deleteResult.rowCount > 0) {
+        console.log(`Deleted ${deleteResult.rowCount} box(es) older than 24 hours.`);
+      }
+    } catch (err) {
+      console.error('❌ Error deleting boxes:', err);
+    }
+  });
 
 
   app.get('/init-db', async (req, res) => {
@@ -87,7 +105,8 @@ app.post('/create-box', async (req, res) => {
       // Check if the username already exists
       const checkResult = await pool.query('SELECT * FROM boxes WHERE username = $1', [username]);
       if (checkResult.rows.length > 0) {
-        return res.send('❌ Box with this username already exists.');
+        // Redirect to the inbox of the existing box
+        return res.redirect(`/inbox/${username}`);
       }
   
       // Hash the password
@@ -96,13 +115,13 @@ app.post('/create-box', async (req, res) => {
       // Insert the new box with hashed password
       await pool.query('INSERT INTO boxes (username, password) VALUES ($1, $2)', [username, hashedPassword]);
   
-      // Redirect to inbox login page
+      // Redirect to the inbox after creating a new box
       res.redirect(`/inbox/${username}`);
     } catch (err) {
       console.error('❌ Error creating box:', err);
       res.send('Error creating box. Please try again.');
     }
-  });
+});
 
 app.get('/box/:username', async (req, res) => {
     const { username } = req.params;
