@@ -27,7 +27,7 @@ SecretBox is an anonymous messaging platform that allows users to receive anonym
 - **Node.js**: [Download Node.js](https://nodejs.org/)
 - **PostgreSQL**: [Download PostgreSQL](https://www.postgresql.org/)
 
-<p align="center"> <img src="https://img.shields.io/badge/Node.js-v16-green" alt="Node.js version"> <img src="https://img.shields.io/badge/PostgreSQL-v13-blue" alt="PostgreSQL version"> <img src="https://img.shields.io/badge/Express.js-v4-blue" alt="Express.js version"> </p>
+<p align="left"> <img src="https://img.shields.io/badge/Node.js-v16-green" alt="Node.js version"> <img src="https://img.shields.io/badge/PostgreSQL-v13-blue" alt="PostgreSQL version"> <img src="https://img.shields.io/badge/Express.js-v4-blue" alt="Express.js version"> </p>
 
 ### Installation
 
