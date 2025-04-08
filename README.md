@@ -35,6 +35,6 @@ Clone the repository:
    git clone https://github.com/devFiend/secretbox.git
    cd secretbox
 
-   Install dependencies: npm install
+   Install dependencies: npm install```
 
 <p align="center"> <img src="https://img.shields.io/badge/Node.js-v16-green" alt="Node.js version"> <img src="https://img.shields.io/badge/PostgreSQL-v13-blue" alt="PostgreSQL version"> <img src="https://img.shields.io/badge/Express.js-v4-blue" alt="Express.js version"> </p>
