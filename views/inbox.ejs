@@ -1,188 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= username %>'s Inbox </title>
-    <link rel="stylesheet" href="/styles.css"> <!-- Link to styles.css -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title><%= username %>'s Inbox</title>
+  <link rel="stylesheet" href="/styles.css" />
 
-<style>
-    /* Container Styles */
-.container {
-    background-color: white;
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    transition: transform 0.3s ease-in-out;
-}
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #f9f5ff, #e0f7fa);
+      font-family: 'Poppins', sans-serif;
+      color: #333;
+    }
 
-/* Hover Effect for Container */
-.container:hover {
-    transform: scale(1.05);
-}
-
-/* Title */
-h2 {
-    font-size: 2.5em;
-    color: #32cd32; /* Green color for the title */
-    margin-bottom: 20px;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-/* Messages Section */
-.message-list {
-    list-style: none;
-    padding: 0;
-    margin: 20px 0;
-}
-
-.message-item {
-    background-color: #f7f7f7;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-    font-size: 1.1em;
-}
-
-.message-item p {
-    margin: 0;
-    font-size: 1.2em;
-}
-
-.message-item em {
-    color: #666;
-    font-size: 1em;
-}
-
-/* Empty Message */
-p.no-messages {
-    font-size: 1.3em;
-    color: #ff1493; /* Pink for no messages */
-    margin-top: 20px;
-}
-
-/* Secret Box Link */
-.box-link-container {
-    margin-top: 30px;
-}
-
-.box-link {
-    display: inline-block;
-    font-size: 1.3em;
-    color: #32cd32; /* Green link */
-    text-decoration: none;
-    margin-right: 15px;
-    padding: 10px;
-    background-color: #f7f7f7;
-    border-radius: 8px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-}
-
-.box-link:hover {
-    background-color: #ff7f50; /* Hover effect for the link */
-    color: white;
-    transform: scale(1.05);
-}
-
-.copy-btn {
-    background-color: #32cd32; /* Green button */
-    color: white;
-    border: none;
-    padding: 12px 25px;
-    font-size: 1.2em;
-    border-radius: 8px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background-color 0.3s, transform 0.3s;
-}
-
-.copy-btn:hover {
-    background-color: #ff7f50; /* Hover effect for copy button */
-    transform: scale(1.1);
-}
-
-/* Total Messages Section */
-p strong {
-    font-size: 1.3em;
-    color: #32cd32; /* Green color for strong text */
-}
-
-/* Responsive Design for Smaller Screens */
-@media (max-width: 768px) {
     .container {
-        width: 90%;
-        padding: 20px;
+      background: white;
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 700px;
+      width: 90%;
+      margin: 50px auto;
+      transition: transform 0.3s ease;
+    }
+
+    .container:hover {
+      transform: scale(1.02);
     }
 
     h2 {
-        font-size: 2em;
+      font-size: 2.2em;
+      color: #7b2cbf;
+      margin-bottom: 1rem;
+      text-shadow: 1px 1px 4px rgba(123, 44, 191, 0.1);
+    }
+
+    .message-list {
+      list-style: none;
+      padding: 0;
+      margin: 30px 0;
     }
 
     .message-item {
-        font-size: 1.1em;
+      background: #f1f1ff;
+      border-left: 5px solid #7b2cbf;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.05);
+      text-align: left;
+    }
+
+    .message-item p {
+      font-size: 1.1rem;
+      margin: 0;
+    }
+
+    .no-messages {
+      font-size: 1.3rem;
+      color: #ff4081;
+      font-weight: 500;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .pagination a {
+      padding: 8px 16px;
+      background: #7b2cbf;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .pagination a:hover {
+      background: #ff4081;
+    }
+
+    .box-link-container {
+      margin-top: 2rem;
     }
 
     .box-link {
-        font-size: 1.1em;
-        padding: 8px;
+      display: inline-block;
+      font-size: 1rem;
+      color: #7b2cbf;
+      background-color: #f9f1fe;
+      padding: 10px 20px;
+      border-radius: 8px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .box-link:hover {
+      background-color: #7b2cbf;
+      color: white;
+      transform: scale(1.05);
     }
 
     .copy-btn {
-        font-size: 1.1em;
-        padding: 10px 20px;
+      margin-top: 10px;
+      padding: 12px 25px;
+      font-size: 1rem;
+      background: linear-gradient(135deg, #7b2cbf, #ff4081);
+      border: none;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
     }
-}
 
-</style>
+    .copy-btn:hover {
+      transform: scale(1.1);
+    }
+
+    p strong {
+      color: #7b2cbf;
+      font-weight: 600;
+    }
+
+    @media (max-width: 600px) {
+      h2 {
+        font-size: 1.8em;
+      }
+
+      .message-item {
+        font-size: 1em;
+      }
+
+      .box-link, .copy-btn {
+        font-size: 0.95rem;
+        padding: 10px 15px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Messages for <%= username %>'s SecretBox</h2>
-    
-        <% if (messages.length === 0) { %>
-            <p class="no-messages">No messages yet. Share your box link and wait for secrets!</p>
-        <% } else { %>
-            <ul class="message-list">
-                <% messages.forEach((message) => { %>
-                    <li class="message-item">
-                        <p><strong>Message:</strong> <%= message.content %> </p>
-                        <!-- <p><em>Sent at: <%= message.sent_at %></em></p> -->
-                    </li>
-                <% }) %>
-            </ul>
+  <div class="container">
+    <h2>Messages for <%= username %>'s SecretBox</h2>
+
+    <% if (messages.length > 0) { %>
+      <ul class="message-list">
+        <% messages.forEach((message) => { %>
+          <li class="message-item">
+            <p><strong>Message:</strong> <%= message.content %></p>
+          </li>
+        <% }) %>
+      </ul>
+
+      <div class="pagination">
+        <% if (currentPage > 1) { %>
+          <a href="/inbox/<%= username %>?page=<%= currentPage - 1 %>">Previous</a>
         <% } %>
-    
-        <p><strong>Total messages:</strong> <%= messageCount %></p>
-    
-        <p>Your secret box is ready! Share this link:</p>
-        <div class="box-link-container">
-            <a href="/box/<%= username %>" class="box-link" id="boxLink" style="display: none;"></a>
-            <button class="copy-btn" onclick="copyLink()">Copy</button>
-        </div>
+
+        <span>Page <%= currentPage %> of <%= totalPages %></span>
+
+        <% if (currentPage < totalPages) { %>
+          <a href="/inbox/<%= username %>?page=<%= currentPage + 1 %>">Next</a>
+        <% } %>
+      </div>
+    <% } else { %>
+      <p class="no-messages">No messages yet. Share your box link and wait for secrets!</p>
+    <% } %>
+
+    <p><strong>Total messages:</strong> <%= messageCount %></p>
+
+    <p>Your secret box is ready! Share this link:</p>
+    <div class="box-link-container">
+      <a href="/box/<%= username %>" class="box-link" id="boxLink" style="display: none;"></a>
+      <button class="copy-btn" onclick="copyLink()">Copy SecretBox Link</button>
     </div>
-    
+  </div>
 
-    <script>
+  <script>
+    function copyLink() {
+      const baseUrl = window.location.origin;
+      const boxPath = document.querySelector('.box-link').getAttribute('href');
+      const fullUrl = baseUrl + boxPath;
 
-function copyLink() {
-    const baseUrl = window.location.origin; // Get the base URL of the app (including domain)
-    const boxPath = document.querySelector('.box-link').getAttribute('href'); // Get the path part
-    const fullUrl = baseUrl + boxPath; // Combine the base URL and path
-    
-    navigator.clipboard.writeText(fullUrl) // Write the full URL to the clipboard
-        .then(() => {
-            alert("Link copied to clipboard!"); // Optional alert to inform the user
-        })
-        .catch((error) => {
-            console.error("Failed to copy the link: ", error);
-        });
-}
-
-    </script>
+      navigator.clipboard.writeText(fullUrl)
+        .then(() => alert("Link copied to clipboard!"))
+        .catch((err) => console.error("Failed to copy: ", err));
+    }
+  </script>
 </body>
 </html>

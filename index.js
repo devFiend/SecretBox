@@ -149,84 +149,98 @@ app.post('/box/:username', async (req, res) => {
 
 app.get('/inbox/:username', async (req, res) => {
     const { username } = req.params;
+    const { page = 1 } = req.query;  // Get page number from query string, default to 1
+  
+    const messagesPerPage = 5; // Set the number of messages per page
   
     try {
-      const boxResult = await pool.query(
-        'SELECT * FROM boxes WHERE username = $1',
-        [username]
-      );
-  
-      if (boxResult.rows.length === 0) {
-        return res.send('Box not found.');
-      }
-  
-      // ✅ Show the login form instead of inbox
-      res.render('inbox-login', { username, error: null });
-  
-    } catch (err) {
-      console.error(err);
-      res.send('Error loading login page.');
-    }
-  });
+        const boxResult = await pool.query(
+            'SELECT * FROM boxes WHERE username = $1',
+            [username]
+        );
 
-  app.post('/inbox/:username', async (req, res) => {
+        if (boxResult.rows.length === 0) {
+            return res.send('Box not found.');
+        }
+        
+        // Show the login form to authenticate user
+        res.render('inbox-login', { username, error: null });
+
+    } catch (err) {
+        console.error(err);
+        res.send('Error loading login page.');
+    }
+});
+
+app.post('/inbox/:username', async (req, res) => {
     const { username } = req.params;
     const { password } = req.body;
   
     try {
-      const boxResult = await pool.query(
-        'SELECT * FROM boxes WHERE username = $1',
-        [username]
-      );
+        const boxResult = await pool.query(
+            'SELECT * FROM boxes WHERE username = $1',
+            [username]
+        );
   
-      if (boxResult.rows.length === 0) {
-        return res.send('Box not found.');
-      }
+        if (boxResult.rows.length === 0) {
+            return res.send('Box not found.');
+        }
   
-      const box = boxResult.rows[0];
+        const box = boxResult.rows[0];
   
-      const isMatch = await bcrypt.compare(password, box.password);
-      if (!isMatch) {
-        return res.render('inbox-login', {
-          username,
-          error: '❌ Incorrect password!',
+        const isMatch = await bcrypt.compare(password, box.password);
+        if (!isMatch) {
+            return res.render('inbox-login', {
+                username,
+                error: '❌ Incorrect password!',
+            });
+        }
+  
+        // Get the page number from the query string (default to 1)
+        const { page = 1 } = req.query;
+        const messagesPerPage = 5;
+  
+        // Fetch messages with pagination
+        const messagesResult = await pool.query(
+            'SELECT * FROM messages WHERE box_id = $1 ORDER BY sent_at DESC LIMIT $2 OFFSET $3',
+            [box.id, messagesPerPage, (page - 1) * messagesPerPage]
+        );
+  
+        // Get the total number of messages to calculate total pages
+        const totalMessagesResult = await pool.query(
+            'SELECT COUNT(*) FROM messages WHERE box_id = $1',
+            [box.id]
+        );
+  
+        const totalMessages = parseInt(totalMessagesResult.rows[0].count);
+        const totalPages = Math.ceil(totalMessages / messagesPerPage);
+  
+        // Format the `sent_at` field to show time only (HH:mm:ss)
+        const formattedMessages = messagesResult.rows.map(message => {
+            const date = new Date(message.sent_at);
+            const time = date.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+            });
+            message.sent_at = time;
+            return message;
         });
-      }
   
-      const messagesResult = await pool.query(
-        'SELECT * FROM messages WHERE box_id = $1 ORDER BY sent_at DESC',
-        [box.id]
-      );
-
-      // Format the `sent_at` field to just show the time (HH:mm:ss)
-      const formattedMessages = messagesResult.rows.map(message => {
-        // Convert the UTC string into a Date object
-        const date = new Date(message.sent_at);
-      
-        // Format it to the local time (using 'en-US' for 12-hour time format, you can adjust this based on your needs)
-        const time = date.toLocaleTimeString('en-US', {
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
+        // Render the inbox with pagination info
+        res.render('inbox', {
+            username,
+            messages: formattedMessages,
+            messageCount: formattedMessages.length,
+            currentPage: parseInt(page),  // Pass the current page to the view
+            totalPages,
         });
-      
-        message.sent_at = time; // Update sent_at with the formatted time
-        return message;
-      });
-  
-      res.render('inbox', {
-        username,
-        messages: formattedMessages,
-        messageCount: formattedMessages.length,
-      });
   
     } catch (err) {
-      console.error(err);
-      res.send('Error loading inbox.');
+        console.error(err);
+        res.send('Error loading inbox.');
     }
 });
-
-  
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
